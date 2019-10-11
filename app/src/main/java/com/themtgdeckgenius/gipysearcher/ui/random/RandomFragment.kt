@@ -1,4 +1,4 @@
-package com.themtgdeckgenius.gipysearcher.ui.dashboard
+package com.themtgdeckgenius.gipysearcher.ui.random
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.themtgdeckgenius.gipysearcher.R
 
-class DashboardFragment : Fragment() {
+class RandomFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private lateinit var randomViewModel: RandomViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-            ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        randomViewModel = ViewModelProviders.of(this).get(RandomViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_random, container, false)
         val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(this, Observer {
+        randomViewModel.text.observe(this, Observer {
             textView.text = it
         })
         return root
