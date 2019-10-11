@@ -11,12 +11,12 @@ import retrofit2.http.Query
 interface GiphyApiService {
 
     @GET("v1/gifs/search")
-    fun getMaxGiphy(@Query("api_key") api_key: String,
-                    @Query("q") q: String,
-                    @Query("limit") limit: Int,
-                    @Query("offset") offset: Int,
-                    @Query("rating") rating: String,
-                    @Query("lang") lang: String) : Observable<GiphyModel.Result>
+    fun getGifList(@Query("api_key") api_key: String,
+                   @Query("q") q: String,
+                   @Query("limit") limit: Int,
+                   @Query("offset") offset: Int,
+                   @Query("rating") rating: String,
+                   @Query("lang") lang: String) : Observable<GiphyModel.Result>
 
     companion object{
         fun create() : GiphyApiService{
