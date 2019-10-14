@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.Group
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -24,14 +23,14 @@ import com.themtgdeckgenius.gipysearcher.networking.models.GiphyModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.*
-import kotlin.collections.ArrayList
 
 class SearchFragment : Fragment() {
 
     private lateinit var searchViewModel: SearchViewModel
+    private lateinit var giphyDisplay: RecyclerView
+    private lateinit var giphyAdapter: GiphyAdapter
     private var disposable: Disposable? = null
-    private var giphyDisplay: RecyclerView? = null
+    private lateinit var linearLayoutManager: LinearLayoutManager
     private val giphyApiServe by lazy {
         GiphyApiService.create()
     }
@@ -73,20 +72,27 @@ class SearchFragment : Fragment() {
         val secondarySearchButton: Button = root.findViewById(R.id.button_search_secondary) as Button
         secondarySearchButton.setOnClickListener {
             searchViewModel.updateSearchTerm(secondaryInputTerm.text.toString())
+            beginSearch(searchViewModel.searchTerm.value.toString())
         }
 
         giphyDisplay = root.findViewById(R.id.recycler_view_search) as RecyclerView
-
+        linearLayoutManager = LinearLayoutManager(context)
+        giphyDisplay.layoutManager = linearLayoutManager
+        giphyAdapter = GiphyAdapter(searchViewModel)
+        giphyDisplay.adapter = giphyAdapter
 
         return root
     }
 
     private fun beginSearch(searchString: String) {
-        disposable = giphyApiServe.getGifList(BuildConfig.GIPHY_API_KEY, searchString, 25, 0, "G", "en")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { result -> searchViewModel.updateGifList(result.data)
-                giphyDisplay!!.layoutManager = LinearLayoutManager(context)
-                giphyDisplay!!.adapter = GiphyAdapter(searchViewModel.gifList.value as ArrayList<GiphyModel.Data>, context as Context)}
+        disposable =
+            giphyApiServe.getGifList(BuildConfig.GIPHY_API_KEY, searchString, 25, 0, "G", "en")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { result ->
+                    searchViewModel.updateGifList(result.data)
+                    giphyAdapter.notifyDataSetChanged()
+
+                }
     }
 }

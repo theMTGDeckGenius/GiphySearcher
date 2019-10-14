@@ -16,16 +16,16 @@ class SearchViewModel : ViewModel() {
     }
 
     private val _gifList = MutableLiveData<List<GiphyModel.Data>>().apply {
-        value = null
+        value = ArrayList()
     }
 
     val searchTerm: LiveData<String> = _searchTerm
 
     fun updateSearchTerm(result: String) {
         _searchTerm.value = result
-        if (result.isNotEmpty()){
+        if (result.isNotEmpty()) {
             updateTitle(result)
-        } else{
+        } else {
             resetTitle()
         }
     }
@@ -34,11 +34,11 @@ class SearchViewModel : ViewModel() {
         _title.value = "Searching: $result"
     }
 
-    private fun resetTitle(){
+    private fun resetTitle() {
         _title.value = "Let's Look for it!"
     }
 
-    fun updateGifList(result: List<GiphyModel.Data>){
+    fun updateGifList(result: List<GiphyModel.Data>) {
         _gifList.value = result
     }
 
